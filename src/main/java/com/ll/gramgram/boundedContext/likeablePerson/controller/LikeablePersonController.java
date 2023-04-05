@@ -61,4 +61,15 @@ public class LikeablePersonController {
 
         return "usr/likeablePerson/list";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{likeableId}")
+    public String removeLikeablePerson(@PathVariable Long likeableId){
+        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
+        log.info("likeablePerson 삭제 시작");
+//        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getUsername());
+        RsData<LikeablePerson> deleteRsData = likeablePersonService.delete(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
+
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
+    }
 }
