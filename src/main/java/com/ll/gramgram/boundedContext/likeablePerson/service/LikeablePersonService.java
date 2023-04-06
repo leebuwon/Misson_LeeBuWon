@@ -51,4 +51,23 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
+    /**
+     * instaMemberId로 삭제하는 방법
+     */
+    @Transactional
+    public RsData<LikeablePerson> removeLikeablePerson(Long likeableId, InstaMember instaMember, Long instaMemberId) {
+        LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
+
+        if (likeablePerson == null) {
+            return RsData.of("F-2", "입력하신 아이디에 해당하는 '좋아요' 누른 사람이 존재하지 않습니다.");
+        }
+
+        if (!instaMember.getId().equals(instaMemberId)){
+            return RsData.of("F-1", "본인의 계정으로 '좋아요' 누른 사람만 취소할 수 있습니다.");
+        }
+
+        likeablePersonRepository.delete(likeablePerson); // 삭제
+
+        return RsData.of("S-1", "선택하신 인스타유저를 호감상대에서 취소하였습니다.");
+    }
 }
