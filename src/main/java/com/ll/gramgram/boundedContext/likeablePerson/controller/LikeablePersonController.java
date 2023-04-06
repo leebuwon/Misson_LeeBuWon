@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/likeablePerson")
@@ -64,11 +65,37 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{likeableId}")
-    public String removeLikeablePerson(@PathVariable Long likeableId){
+    public String deleteLikeablePerson(@PathVariable Long likeableId){
         //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
         log.info("likeablePerson 삭제 시작");
-        RsData<LikeablePerson> removeRsData = likeablePersonService.removeLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
+        RsData<LikeablePerson> removeRsData = likeablePersonService.deleteLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
 
         return rq.redirectWithMsg("/likeablePerson/list", removeRsData);
+    }
+
+    /**
+     * V2
+     */
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/deleteV2/{likeableId}")
+    public String deleteLikeablePersonV2(@PathVariable Long likeableId){
+        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
+        log.info("likeablePerson 삭제 시작");
+        LikeablePerson likeablePerson = likeablePersonService.findById(likeableId).orElse(null);
+        if (likeablePerson == null){
+            return rq.historyBack("이미 취소된 호감입니다.");
+        }
+
+        if (!Objects.equals(rq.getMember().getInstaMember().getId(), likeablePerson.getFromInstaMember().getId())){
+            return rq.historyBack("권한이 없습니다.");
+        }
+
+        RsData deleteRsData = likeablePersonService.deleteLikeablePersonV2(likeablePerson);
+
+        if (deleteRsData.isFail()){
+            return rq.historyBack(deleteRsData);
+        }
+
+        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +56,7 @@ public class LikeablePersonService {
      * instaMemberId로 삭제하는 방법
      */
     @Transactional
-    public RsData<LikeablePerson> removeLikeablePerson(Long likeableId, InstaMember instaMember, Long instaMemberId) {
+    public RsData<LikeablePerson> deleteLikeablePerson(Long likeableId, InstaMember instaMember, Long instaMemberId) {
         LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
 
         if (likeablePerson == null) {
@@ -69,5 +70,17 @@ public class LikeablePersonService {
         likeablePersonRepository.delete(likeablePerson); // 삭제
 
         return RsData.of("S-1", "선택하신 인스타유저를 호감상대에서 취소하였습니다.");
+    }
+
+    public Optional<LikeablePerson> findById(Long likeableId) {
+        return likeablePersonRepository.findById(likeableId);
+    }
+
+    @Transactional
+    public RsData deleteLikeablePersonV2(LikeablePerson likeablePerson) {
+        String toInstaUsername = likeablePerson.getFromInstaMember().getUsername();
+        likeablePersonRepository.delete(likeablePerson);
+
+        return RsData.of("S-1", "%s님에 대한 호감을 취소하였습니다.".formatted(toInstaUsername));
     }
 }
