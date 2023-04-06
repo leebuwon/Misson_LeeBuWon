@@ -55,7 +55,7 @@ public class LikeablePersonService {
      * instaMemberId로 삭제하는 방법
      */
     @Transactional
-    public RsData<LikeablePerson> delete(Long likeableId, InstaMember instaMember, Long instaMemberId) {
+    public RsData<LikeablePerson> removeLikeablePerson(Long likeableId, InstaMember instaMember, Long instaMemberId) {
         LikeablePerson likeablePerson = likeablePersonRepository.findById(likeableId).orElse(null);
 
         if (likeablePerson == null) {
