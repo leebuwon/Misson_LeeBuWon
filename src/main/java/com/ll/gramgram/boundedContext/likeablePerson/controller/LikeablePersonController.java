@@ -63,32 +63,30 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{likeableId}")
-    public String deleteLikeablePerson(@PathVariable Long likeableId){
-        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
-        log.info("likeablePerson 삭제 시작");
-        RsData<LikeablePerson> removeRsData = likeablePersonService.deleteLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
-
-        return rq.redirectWithMsg("/likeablePerson/list", removeRsData);
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/delete/{likeableId}")
+//    public String deleteLikeablePerson(@PathVariable Long likeableId){
+//        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
+//        log.info("likeablePerson 삭제 시작");
+//        RsData<LikeablePerson> removeRsData = likeablePersonService.deleteLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
+//
+//        return rq.redirectWithMsg("/likeablePerson/list", removeRsData);
+//    }
 
     /**
      * V2
      */
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/deleteV2/{likeableId}")
+    @DeleteMapping("/{likeableId}")
     public String deleteLikeablePersonV2(@PathVariable Long likeableId){
         //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
         log.info("likeablePerson 삭제 시작");
-        LikeablePerson likeablePerson = likeablePersonService.findById(likeableId).orElse(null);
-        if (likeablePerson == null){
-            return rq.historyBack("이미 취소된 호감입니다.");
-        }
 
-        if (!Objects.equals(rq.getMember().getInstaMember().getId(), likeablePerson.getFromInstaMember().getId())){
-            return rq.historyBack("권한이 없습니다.");
-        }
+        LikeablePerson likeablePerson = likeablePersonService.findById(likeableId).orElse(null);
+
+        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
+
+        if (canActorDeleteRsData.isFail()) return rq.historyBack(canActorDeleteRsData);
 
         RsData deleteRsData = likeablePersonService.deleteLikeablePersonV2(likeablePerson);
 
