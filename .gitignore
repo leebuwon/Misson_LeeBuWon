@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### application-kakao.yml ###
-application-kakao.yml
+application-secret.yml
