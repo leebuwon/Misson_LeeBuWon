@@ -69,6 +69,9 @@ public class LikeablePersonController {
 //        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
 //        log.info("likeablePerson 삭제 시작");
 //        RsData<LikeablePerson> removeRsData = likeablePersonService.deleteLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
+//        if (removeRsData.isFail()){
+//            return rq.historyBack(removeRsData);
+//        }
 //
 //        return rq.redirectWithMsg("/likeablePerson/list", removeRsData);
 //    }
