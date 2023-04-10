@@ -12,7 +12,6 @@ import java.util.Enumeration;
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
-
     private final Rq rq;
 
     @GetMapping("/")

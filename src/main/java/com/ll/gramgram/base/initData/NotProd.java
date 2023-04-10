@@ -34,6 +34,7 @@ public class NotProd {
             instaMemberService.connect(memberUser5ByKakao, "bw1611", "M");
 
             likeablePersonService.like(memberUser5ByKakao, "bw1111", 1);
+            likeablePersonService.like(memberUser5ByKakao, "bw2222", 2);
         };
     }
 }

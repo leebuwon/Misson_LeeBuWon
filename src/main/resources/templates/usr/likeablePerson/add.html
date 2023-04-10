@@ -1,4 +1,4 @@
-<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{usr/layout/layout.html}">
 
 <head>
     <title>당신이 좋아하는 사람이 누군지 알려주세요.</title>
@@ -17,7 +17,7 @@
 
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
         <script th:inline="javascript">
-            const myInstaMemberUsername = /*[[ ${@rq.member.instaMember} ]]*/ null;
+            const myInstaMemberUsername = /*[[ ${@rq.member.instaMember.username} ]]*/ null;
 
             function AddForm__submit(form) {
                 // username 이(가) 올바른지 체크
