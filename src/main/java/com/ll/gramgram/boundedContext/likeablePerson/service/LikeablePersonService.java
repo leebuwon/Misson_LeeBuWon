@@ -7,6 +7,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
@@ -23,15 +25,30 @@ public class LikeablePersonService {
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
         if (member.hasConnectedInstaMember() == false) {
-            return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
+            return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
         if (member.getInstaMember().getUsername().equals(username)) {
-            return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
+            return RsData.of("F-2", "본인을 호감상대로 등록할 수 없습니다.");
         }
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+        log.info("toInstaMember = {}", toInstaMember);
+
+        //TODO: 이미 좋아요 된 사람에게 또 좋아요하는 것을 방지하는 로직
+        Optional<LikeablePerson> existingLikeablePerson = likeablePersonRepository.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember);
+
+        if (existingLikeablePerson.isPresent()) {
+            return RsData.of("F-3", "이미 좋아요된 사람에게는 좋아요를 또 할 수 없습니다.");
+        }
+
+        //TODO: 좋아요 목록의 사람이 11명이 넘어가면 에러메시지 출력
+        log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
+
+        if (member.getInstaMember().getFromLikeablePeople().size() >= 11) {
+            return RsData.of("F-4", "좋아요 한 사람은 11명을 넘길 수 없습니다.");
+        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()

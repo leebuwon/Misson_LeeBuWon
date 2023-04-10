@@ -35,6 +35,15 @@ public class NotProd {
 
             likeablePersonService.like(memberUser5ByKakao, "bw1111", 1);
             likeablePersonService.like(memberUser5ByKakao, "bw2222", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw3333", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw4444", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw5555", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw6666", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw7777", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw8888", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw9999", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw1010", 2);
+            likeablePersonService.like(memberUser5ByKakao, "bw111111", 2);
         };
     }
 }
