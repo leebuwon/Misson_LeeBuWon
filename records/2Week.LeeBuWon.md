@@ -11,7 +11,7 @@
 ---
 ## 1주차 미션 요약
 
-### [접근 방법]
+### [해결 방법]
 
 ### case 4
 - 1, 우선 fromInstaMember멤버의 username과 toInstaMember의 username을 repository에서 조회한다.
