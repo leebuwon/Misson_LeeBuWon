@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.appconfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -53,11 +54,12 @@ public class LikeablePersonService {
             return RsData.of("S-2", "입력하신 인스타유저(%s)의 호감유형을 수정하였습니다.".formatted(username), updateLikeablePerson);
         }
 
-        //TODO: case 5 - 좋아요 목록의 사람이 11명이 넘어가면 에러메시지 출력
+        //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
         log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
 
-        if (member.getInstaMember().getFromLikeablePeople().size() >= 11) {
-            return RsData.of("F-4", "좋아요 한 사람은 11명을 넘길 수 없습니다.");
+//        if (member.getInstaMember().getFromLikeablePeople().size() >= 10) {
+        if (member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax()) {
+            return RsData.of("F-4", "좋아요 한 사람은 10명을 넘길 수 없습니다.");
         }
 
         LikeablePerson likeablePerson = LikeablePerson

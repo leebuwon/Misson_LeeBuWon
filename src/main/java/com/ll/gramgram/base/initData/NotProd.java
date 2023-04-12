@@ -43,7 +43,6 @@ public class NotProd {
             likeablePersonService.like(memberUser5ByKakao, "bw8888", 2);
             likeablePersonService.like(memberUser5ByKakao, "bw9999", 2);
             likeablePersonService.like(memberUser5ByKakao, "bw1010", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw111111", 2);
         };
     }
 }

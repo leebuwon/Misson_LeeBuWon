@@ -32,6 +32,7 @@
 - [x] setter를 이용한 의존성 주입방법은 단점이 많기 떄문에 getter만 이용하여 할 수 있도록 수정해준다.
 - [x] 현재는 case 6을 진행하면서 case 4를 사용하지 않게되었는데 AttractiveTypeCode를 이용하여 case 4를 활성화 해준다. 즉 같은 유형의 좋아요가 들어왔을 경우 case 4가 실행되게 해준다.
 - [ ] 현재 LikeablePseson의 like() 메서드가 너무 많은 것을 처리하여 수정 필요
+- [x] member.getInstaMember().getFromLikeablePeople().size() >= 10 하드코딩된 것을 yml파일로 이동
 
 ### [정리]
 - Setter를 사용하면 왜 안좋을까?
