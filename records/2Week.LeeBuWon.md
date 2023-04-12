@@ -21,6 +21,8 @@
 - 1, 강사님이 layout에 주신 source 코드를 활용하여 접근하였습니다.
 - 2, member.getInstaMember().getFromLikeablePeople().size() 를 통하여 좋아요 한 숫자를 가져왔습니다.
 - 3, 좋아요한 숫자가 11이상이면 예외처리가 되도록 member.getInstaMember().getFromLikeablePeople().size() >= 11을 실행하게하였습니다.
+- 4, 하드코딩 된 것이 좋지 않다고하여 yml에 custom을 추가하고 AppConfig에서 처리해주었으며 LikeablePersonFromMax() 생성
+- 5, member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax() 을 추가하여 해결하였다.
 
 ### case 6
 - 1, case 4를 기반으로 수정하여 isPresent()에서 존재한다면 existingLikeablePerson.get() 이용하여 정보를 가지고 온다.
