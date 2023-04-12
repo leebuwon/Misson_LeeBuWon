@@ -57,7 +57,6 @@ public class LikeablePersonService {
         //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
         log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
 
-//        if (member.getInstaMember().getFromLikeablePeople().size() >= 10) {
         if (member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax()) {
             return RsData.of("F-4", "좋아요 한 사람은 10명을 넘길 수 없습니다.");
         }
@@ -111,4 +110,5 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
+
 }

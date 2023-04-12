@@ -33,6 +33,7 @@
 - [x] 현재는 case 6을 진행하면서 case 4를 사용하지 않게되었는데 AttractiveTypeCode를 이용하여 case 4를 활성화 해준다. 즉 같은 유형의 좋아요가 들어왔을 경우 case 4가 실행되게 해준다.
 - [ ] 현재 LikeablePseson의 like() 메서드가 너무 많은 것을 처리하여 수정 필요
 - [x] member.getInstaMember().getFromLikeablePeople().size() >= 10 하드코딩된 것을 yml파일로 이동
+- [ ] ServiceTest 작성
 
 ### [정리]
 - Setter를 사용하면 왜 안좋을까?
