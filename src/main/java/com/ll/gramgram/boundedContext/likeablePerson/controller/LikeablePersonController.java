@@ -15,13 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 
 @Controller
 @RequestMapping("/likeablePerson")
 @RequiredArgsConstructor
+@Slf4j
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
@@ -85,6 +84,7 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Long id) {
+        log.info("delete 시작");
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
 
         RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
