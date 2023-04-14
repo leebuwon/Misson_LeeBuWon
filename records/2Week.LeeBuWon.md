@@ -36,6 +36,7 @@
 - [ ] 현재 LikeablePseson의 like() 메서드가 너무 많은 것을 처리하여 수정 필요
 - [x] member.getInstaMember().getFromLikeablePeople().size() >= 10 하드코딩된 것을 yml파일로 이동
 - [ ] ServiceTest 작성
+- [ ] N + 1 문제 해결
 
 ### [정리]
 - Setter를 사용하면 왜 안좋을까?
