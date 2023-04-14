@@ -49,8 +49,7 @@ public class LikeablePersonService {
         if (existingLikeablePerson.isPresent()) {
             LikeablePerson updateLikeablePerson = existingLikeablePerson.get(); // 1, 정보를 가져온다.
             updateLikeablePerson.update(attractiveTypeCode); // 2, set -> get으로 업데이트 수정
-            likeablePersonRepository.save(updateLikeablePerson); // 3, 다시 저장해준다.
-
+            // Save가 없더라도 영속성 컨텍스트에서 관리되는 엔티디는 자동으로 갱신이 된다.
             return RsData.of("S-2", "입력하신 인스타유저(%s)의 호감유형을 수정하였습니다.".formatted(username), updateLikeablePerson);
         }
 
