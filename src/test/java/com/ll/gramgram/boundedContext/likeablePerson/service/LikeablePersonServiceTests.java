@@ -139,4 +139,47 @@ public class LikeablePersonServiceTests {
 
         assertThat(likeablePersonFromMax).isEqualTo(10);
     }
+
+    @Test
+    @DisplayName("테스트 4")
+    void t004() throws Exception {
+        // 좋아하는 대상의 아이디가 insta_user100 인 `좋아요`들 만 검색
+        /*
+        SELECT l1_0.id,
+        l1_0.attractive_type_code,
+        l1_0.create_date,
+        l1_0.from_insta_member_id,
+        l1_0.from_insta_member_username,
+        l1_0.modify_date,
+        l1_0.to_insta_member_id,
+        l1_0.to_insta_member_username
+        FROM likeable_person l1_0
+        LEFT JOIN insta_member t1_0
+        ON t1_0.id=l1_0.to_insta_member_id
+        WHERE t1_0.username = "insta_user100";
+        */
+        List<LikeablePerson> likeablePeople2 = likeablePersonRepository.findByToInstaMember_username("bw2222");
+
+        assertThat(likeablePeople2.get(0).getId()).isEqualTo(2);
+
+        // 좋아하는 사람이 2번 인스타 회원이고, 좋아하는 대상의 인스타아이디가 "insta_user100" 인 `좋아요`
+        /*
+        SELECT l1_0.id,
+        l1_0.attractive_type_code,
+        l1_0.create_date,
+        l1_0.from_insta_member_id,
+        l1_0.from_insta_member_username,
+        l1_0.modify_date,
+        l1_0.to_insta_member_id,
+        l1_0.to_insta_member_username
+        FROM likeable_person l1_0
+        LEFT JOIN insta_member t1_0
+        ON t1_0.id=l1_0.to_insta_member_id
+        WHERE l1_0.from_insta_member_id = 2
+        AND t1_0.username = "insta_user100";
+        */
+        LikeablePerson likeablePerson = likeablePersonRepository.findByFromInstaMember_usernameAndToInstaMember_username("bw2222", "bw1611");
+
+        assertThat(likeablePerson.getId()).isEqualTo(10);
+    }
 }
