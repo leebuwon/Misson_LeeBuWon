@@ -57,7 +57,7 @@ public class LikeablePersonService {
         log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
 
         if (member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax()) {
-            return RsData.of("F-4", "좋아요 한 사람은 %d명을 넘길 수 없습니다.". formatted(AppConfig.getLikeablePersonFromMax())); // 하드 코딩된 숫자를 max변경에 따라 변하게 수정
+            return RsData.of("F-4", "좋아요 한 사람은 %d명을 넘길 수 없습니다.".formatted(AppConfig.getLikeablePersonFromMax())); // 하드 코딩된 숫자를 max변경에 따라 변하게 수정
         }
 
         LikeablePerson likeablePerson = LikeablePerson
@@ -90,6 +90,12 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData delete(LikeablePerson likeablePerson) {
+        // 너가 생성한 좋아요가 사라졌어.
+        likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
+
+        // 너가 받은 좋아요가 사라졌어.
+        likeablePerson.getToInstaMember().removeToLikeablePerson(likeablePerson);
+
         likeablePersonRepository.delete(likeablePerson);
 
         String likeCanceledUsername = likeablePerson.getToInstaMember().getUsername();
