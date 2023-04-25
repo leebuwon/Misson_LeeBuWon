@@ -52,7 +52,7 @@ public class LikeablePersonService {
 //            // Save가 없더라도 영속성 컨텍스트에서 관리되는 엔티디는 자동으로 갱신이 된다.
 //            return RsData.of("S-2", "입력하신 인스타유저(%s)의 호감유형을 수정하였습니다.".formatted(username), updateLikeablePerson);
 //        }
-//
+
 //        //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
 //        log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
 //
@@ -136,10 +136,12 @@ public class LikeablePersonService {
                 .findFirst()
                 .orElse(null);
 
+        //TODO: case 4 - 이미 좋아요 된 사람에게 또 좋아요하는 것을 방지하는 로직
         if (fromLikeablePerson != null && fromLikeablePerson.getAttractiveTypeCode() == attractiveTypeCode){
             return RsData.of("F-3", "이미 %s님에 대해서 호감표시를 했습니다.".formatted(username));
         }
 
+        //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
         long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
 
         if ( fromLikeablePeople.size() >= likeablePersonFromMax){
@@ -147,10 +149,38 @@ public class LikeablePersonService {
         }
 
         if (fromLikeablePerson != null){
-            return RsData.of("F-2", "%님에 대해서 호감표시가 가능합니다.".formatted(username));
+            return RsData.of("S-2", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));
         }
 
         return RsData.of("S-1", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));
 
+    }
+
+    @Transactional
+    public RsData modifyAttractive(Member member, String username, int attractiveTypeCode) {
+        //TODO: case 6 - 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.
+        List<LikeablePerson> fromLikeablePeople = member.getInstaMember().getFromLikeablePeople();
+
+        LikeablePerson fromLikeablePerson = fromLikeablePeople
+                .stream()
+                .filter(e -> e.getToInstaMember().getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (fromLikeablePerson == null) {
+            return RsData.of("F-7", "호감표시를 하지 않았습니다.");
+        }
+
+        String oldAttractiveTypeDisplayName = fromLikeablePerson.getAttractiveTypeDisplayName();
+
+        fromLikeablePerson.update(attractiveTypeCode); // Save가 없더라도 영속성 컨텍스트에서 관리되는 엔티디는 자동으로 갱신이 된다.
+
+        String newAttractiveTypeDisplayName = fromLikeablePerson.getAttractiveTypeDisplayName();
+
+        return RsData.of("S-3", "%s님에 대한 호감사유를 %s에서 %s(으)로 변경합니다.".formatted(username, oldAttractiveTypeDisplayName, newAttractiveTypeDisplayName));
+    }
+
+    public Optional<LikeablePerson> findByFromInstaMember_usernameAndToInstaMember_username(String fromInstaMemberUsername, String toInstaMemberUsername) {
+        return likeablePersonRepository.findByFromInstaMember_usernameAndToInstaMember_username(fromInstaMemberUsername, toInstaMemberUsername);
     }
 }

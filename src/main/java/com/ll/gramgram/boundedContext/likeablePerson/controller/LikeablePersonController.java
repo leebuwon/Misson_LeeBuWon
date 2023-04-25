@@ -47,15 +47,20 @@ public class LikeablePersonController {
             return rq.historyBack(canLikeRsData);
         }
 
+        RsData rsData = null;
 
-
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
-
-        if (createRsData.isFail()) {
-            return rq.historyBack(createRsData);
+        if (canLikeRsData.getResultCode().equals("S-2")){
+            rsData = likeablePersonService.modifyAttractive(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
+        }
+        else {
+            rsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", createRsData);
+        if (rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
+        return rq.redirectWithMsg("/likeablePerson/list", rsData);
     }
 
     @PreAuthorize("isAuthenticated()")
