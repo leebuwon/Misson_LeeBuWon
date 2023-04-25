@@ -41,6 +41,14 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
+        RsData canLikeRsData = likeablePersonService.canLike(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
+
+        if (canLikeRsData.isFail()) {
+            return rq.historyBack(canLikeRsData);
+        }
+
+
+
         RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
 
         if (createRsData.isFail()) {
@@ -65,19 +73,6 @@ public class LikeablePersonController {
         return "usr/likeablePerson/list";
     }
 
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/delete/{likeableId}")
-//    public String deleteLikeablePerson(@PathVariable Long likeableId){
-//        //TODO: likeablePerson 아이디를 통해 삭제하며, InstaMemberId가 일치해야만 삭제 가능
-//        log.info("likeablePerson 삭제 시작");
-//        RsData<LikeablePerson> removeRsData = likeablePersonService.deleteLikeablePerson(likeableId, rq.getMember().getInstaMember(), rq.getMember().getInstaMember().getId());
-//        if (removeRsData.isFail()){
-//            return rq.historyBack(removeRsData);
-//        }
-//
-//        return rq.redirectWithMsg("/likeablePerson/list", removeRsData);
-//    }
-
     /**
      * V2
      */
@@ -87,7 +82,7 @@ public class LikeablePersonController {
         log.info("delete 시작");
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElse(null);
 
-        RsData canActorDeleteRsData = likeablePersonService.canActorDelete(rq.getMember(), likeablePerson);
+        RsData canActorDeleteRsData = likeablePersonService.canDelete(rq.getMember(), likeablePerson);
 
         if (canActorDeleteRsData.isFail()) return rq.historyBack(canActorDeleteRsData);
 

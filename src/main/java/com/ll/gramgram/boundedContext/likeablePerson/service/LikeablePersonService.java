@@ -38,27 +38,27 @@ public class LikeablePersonService {
         log.info("toInstaMember = {}", toInstaMember);
         log.info("attractiveTypeCode = {}", attractiveTypeCode);
 
-        //TODO: case 4 - 이미 좋아요 된 사람에게 또 좋아요하는 것을 방지하는 로직
-        Optional<LikeablePerson> existingLikeablePersonData = likeablePersonRepository.findByFromInstaMemberAndToInstaMemberAndAttractiveTypeCode(fromInstaMember, toInstaMember, attractiveTypeCode);
-        if (existingLikeablePersonData.isPresent()) {
-            return RsData.of("F-3", "이미 좋아요된 사람에게는 같은 호감유형으로 좋아요 추가할 수 없습니다.");
-        }
-
-        //TODO: case 6 - 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.
-        Optional<LikeablePerson> existingLikeablePerson = likeablePersonRepository.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember);
-        if (existingLikeablePerson.isPresent()) {
-            LikeablePerson updateLikeablePerson = existingLikeablePerson.get(); // 1, 정보를 가져온다.
-            updateLikeablePerson.update(attractiveTypeCode); // 2, set -> get으로 업데이트 수정
-            // Save가 없더라도 영속성 컨텍스트에서 관리되는 엔티디는 자동으로 갱신이 된다.
-            return RsData.of("S-2", "입력하신 인스타유저(%s)의 호감유형을 수정하였습니다.".formatted(username), updateLikeablePerson);
-        }
-
-        //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
-        log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
-
-        if (member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax()) {
-            return RsData.of("F-4", "좋아요 한 사람은 %d명을 넘길 수 없습니다.".formatted(AppConfig.getLikeablePersonFromMax())); // 하드 코딩된 숫자를 max변경에 따라 변하게 수정
-        }
+//        //TODO: case 4 - 이미 좋아요 된 사람에게 또 좋아요하는 것을 방지하는 로직
+//        Optional<LikeablePerson> existingLikeablePersonData = likeablePersonRepository.findByFromInstaMemberAndToInstaMemberAndAttractiveTypeCode(fromInstaMember, toInstaMember, attractiveTypeCode);
+//        if (existingLikeablePersonData.isPresent()) {
+//            return RsData.of("F-3", "이미 좋아요된 사람에게는 같은 호감유형으로 좋아요 추가할 수 없습니다.");
+//        }
+//
+//        //TODO: case 6 - 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.
+//        Optional<LikeablePerson> existingLikeablePerson = likeablePersonRepository.findByFromInstaMemberAndToInstaMember(fromInstaMember, toInstaMember);
+//        if (existingLikeablePerson.isPresent()) {
+//            LikeablePerson updateLikeablePerson = existingLikeablePerson.get(); // 1, 정보를 가져온다.
+//            updateLikeablePerson.update(attractiveTypeCode); // 2, set -> get으로 업데이트 수정
+//            // Save가 없더라도 영속성 컨텍스트에서 관리되는 엔티디는 자동으로 갱신이 된다.
+//            return RsData.of("S-2", "입력하신 인스타유저(%s)의 호감유형을 수정하였습니다.".formatted(username), updateLikeablePerson);
+//        }
+//
+//        //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
+//        log.info("member.getInstaMember().getFromLikeablePeople().size() = {}", member.getInstaMember().getFromLikeablePeople().size());
+//
+//        if (member.getInstaMember().getFromLikeablePeople().size() >= AppConfig.getLikeablePersonFromMax()) {
+//            return RsData.of("F-4", "좋아요 한 사람은 %d명을 넘길 수 없습니다.".formatted(AppConfig.getLikeablePersonFromMax())); // 하드 코딩된 숫자를 max변경에 따라 변하게 수정
+//        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -103,7 +103,7 @@ public class LikeablePersonService {
 
     }
 
-    public RsData canActorDelete(Member actor, LikeablePerson likeablePerson) {
+    public RsData canDelete(Member actor, LikeablePerson likeablePerson) {
         if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
 
         // 수행자의 인스타계정 번호
@@ -117,4 +117,40 @@ public class LikeablePersonService {
         return RsData.of("S-1", "삭제가능합니다.");
     }
 
+    public RsData canLike(Member actor, String username, int attractiveTypeCode) {
+        if (!actor.hasConnectedInstaMember()){
+            return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해주세요");
+        }
+
+        InstaMember fromInstaMember = actor.getInstaMember();
+
+        if (fromInstaMember.getUsername().equals(username)){
+            return RsData.of("F-2", "본인을 호감상대로 추가할 수 없습니다.");
+        }
+
+        // 액터가 생성한 '좋아요' 가져오기
+        List<LikeablePerson> fromLikeablePeople = fromInstaMember.getFromLikeablePeople();
+
+        LikeablePerson fromLikeablePerson = fromLikeablePeople.stream()
+                .filter(e -> e.getToInstaMember().getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (fromLikeablePerson != null && fromLikeablePerson.getAttractiveTypeCode() == attractiveTypeCode){
+            return RsData.of("F-3", "이미 %s님에 대해서 호감표시를 했습니다.".formatted(username));
+        }
+
+        long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
+
+        if ( fromLikeablePeople.size() >= likeablePersonFromMax){
+            return RsData.of("F-4", "최대 %d명에 대해서만 호감표시가 가능합니다.".formatted(likeablePersonFromMax));
+        }
+
+        if (fromLikeablePerson != null){
+            return RsData.of("F-2", "%님에 대해서 호감표시가 가능합니다.".formatted(username));
+        }
+
+        return RsData.of("S-1", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));
+
+    }
 }
