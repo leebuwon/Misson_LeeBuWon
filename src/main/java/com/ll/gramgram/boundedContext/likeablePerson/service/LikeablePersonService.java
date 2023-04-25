@@ -117,15 +117,15 @@ public class LikeablePersonService {
             return RsData.of("F-3", "이미 %s님에 대해서 호감표시를 했습니다.".formatted(username));
         }
 
+        if (fromLikeablePerson != null){
+            return RsData.of("S-2", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));
+        }
+
         //TODO: case 5 - 좋아요 목록의 사람이 10명이 넘어가면 에러메시지 출력
         long likeablePersonFromMax = AppConfig.getLikeablePersonFromMax();
 
         if ( fromLikeablePeople.size() >= likeablePersonFromMax){
             return RsData.of("F-4", "최대 %d명에 대해서만 호감표시가 가능합니다.".formatted(likeablePersonFromMax));
-        }
-
-        if (fromLikeablePerson != null){
-            return RsData.of("S-2", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));
         }
 
         return RsData.of("S-1", "%s님에 대해서 호감표시가 가능합니다.".formatted(username));

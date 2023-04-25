@@ -28,6 +28,7 @@ public class NotProd {
 
             Member memberUser5ByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__2733187710").getData();
             Member memberUser6ByGoogle = memberService.whenSocialLogin("GOOGLE", "GOOGLE__116152084938460177380").getData();
+            Member memberUser6Naver = memberService.whenSocialLogin("NAVER", "NAVER__ophv2uC5MZEYHDvUb7zljwLbZkkecD4Ts5LXfEQmq0g").getData();
 
             instaMemberService.connect(memberUser2, "insta_user2", "M");
             instaMemberService.connect(memberUser3, "insta_user3", "W");
