@@ -24,25 +24,30 @@ public class NotProd {
             Member memberUser2 = memberService.join("user2", "1234").getData();
             Member memberUser3 = memberService.join("user3", "1234").getData();
             Member memberUser4 = memberService.join("user4", "1234").getData();
+            Member memberUser5 = memberService.join("user5", "1234").getData();
 
             Member memberUser5ByKakao = memberService.whenSocialLogin("KAKAO", "KAKAO__2733187710").getData();
             Member memberUser6ByGoogle = memberService.whenSocialLogin("GOOGLE", "GOOGLE__116152084938460177380").getData();
+            Member memberUser6Naver = memberService.whenSocialLogin("NAVER", "NAVER__ophv2uC5MZEYHDvUb7zljwLbZkkecD4Ts5LXfEQmq0g").getData();
 
-            instaMemberService.connect(memberUser2, "bw1111", "M");
-            instaMemberService.connect(memberUser3, "bw2222", "W");
-            instaMemberService.connect(memberUser4, "bw3333", "M");
-            instaMemberService.connect(memberUser5ByKakao, "bw1611", "M");
+            instaMemberService.connect(memberUser2, "insta_user2", "M");
+            instaMemberService.connect(memberUser3, "insta_user3", "W");
+            instaMemberService.connect(memberUser4, "insta_user4", "M");
+            instaMemberService.connect(memberUser5, "insta_user5", "W");
 
-            likeablePersonService.like(memberUser5ByKakao, "bw1111", 1);
-            likeablePersonService.like(memberUser5ByKakao, "bw2222", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw3333", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw4444", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw5555", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw6666", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw7777", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw8888", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw9999", 2);
-            likeablePersonService.like(memberUser5ByKakao, "bw1010", 2);
+            likeablePersonService.like(memberUser3, "insta_user4", 1);
+            likeablePersonService.like(memberUser3, "insta_user100", 2);
+
+            likeablePersonService.like(memberUser5, "insta_user101", 2);
+            likeablePersonService.like(memberUser5, "insta_user102", 2);
+            likeablePersonService.like(memberUser5, "insta_user103", 2);
+            likeablePersonService.like(memberUser5, "insta_user104", 2);
+            likeablePersonService.like(memberUser5, "insta_user105", 2);
+            likeablePersonService.like(memberUser5, "insta_user106", 2);
+            likeablePersonService.like(memberUser5, "insta_user107", 2);
+            likeablePersonService.like(memberUser5, "insta_user108", 2);
+            likeablePersonService.like(memberUser5, "insta_user109", 2);
+            likeablePersonService.like(memberUser5, "insta_user110", 2);
         };
     }
 }

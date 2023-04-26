@@ -38,3 +38,5 @@ out/
 
 ### application-kakao.yml ###
 application-secret.yml
+
+src/main/generated
