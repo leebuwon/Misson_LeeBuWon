@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Enumeration;
@@ -20,7 +21,7 @@ public class HomeController {
         return "usr/home/main";
     }
 
-    @GetMapping("/debugSession")
+    @GetMapping("/usr/debugSession")
     @ResponseBody
     @PreAuthorize("hasAuthority('admin')")
     public String showDebugSession(HttpSession session) {
@@ -36,7 +37,7 @@ public class HomeController {
         return sb.toString().replaceAll("\n", "<br>");
     }
 
-    @GetMapping("/historyBackTest")
+    @GetMapping("/usr/historyBackTest")
     @PreAuthorize("hasAuthority('admin')")
     public String showHistoryBackTest(HttpSession session) {
         return rq.historyBack("관리자 전용 페이지입니다.");
