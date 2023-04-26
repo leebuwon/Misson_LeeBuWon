@@ -136,6 +136,59 @@ public class LikeablePersonControllerTests {
     }
 
     @Test
+    @DisplayName("수정 폼")
+    @WithUserDetails("user3")
+    void t014() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/likeablePerson/modify/2"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("showModify"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="1"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="2"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="3"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        inputValue__attractiveTypeCode = 2;
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        id="btn-modify-like-1"
+                        """.stripIndent().trim())));
+        ;
+    }
+
+    @Test
+    @DisplayName("수정 폼 처리")
+    @WithUserDetails("user3")
+    void t015() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/modify/2")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "abcd")
+                        .param("attractiveTypeCode", "3")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("modify"))
+                .andExpect(status().is3xxRedirection());
+        ;
+    }
+
+    @Test
     @DisplayName("호감목록")
     @WithUserDetails("user3")
     void t005() throws Exception {
@@ -150,16 +203,16 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("showList"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_username">insta_user4</span>
+                        data-test="toInstaMember_username=insta_user4"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_attractiveTypeDisplayName">외모</span>
+                        data-test="toInstaMember_attractiveTypeDisplayName=외모"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_username">insta_user100</span>
+                        data-test="toInstaMember_username=insta_user100"
                         """.stripIndent().trim())))
                 .andExpect(content().string(containsString("""
-                        <span class="toInstaMember_attractiveTypeDisplayName">성격</span>
+                        data-test="toInstaMember_attractiveTypeDisplayName=성격"
                         """.stripIndent().trim())));
         ;
     }
