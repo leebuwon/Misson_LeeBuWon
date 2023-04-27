@@ -48,7 +48,15 @@ public class LikeablePerson extends BaseEntity {
         } + "&nbsp;" + getAttractiveTypeDisplayName();
     }
 
-    public void update(int attractiveTypeCode) {
+    public boolean update(int attractiveTypeCode) {
+        if (this.attractiveTypeCode == attractiveTypeCode){
+            return false;
+        }
+
+        toInstaMember.decreaseLikesCount(fromInstaMember.getGender(), this.attractiveTypeCode);
+        toInstaMember.increaseLikesCount(fromInstaMember.getGender(), attractiveTypeCode);
+
         this.attractiveTypeCode = attractiveTypeCode;
+        return true;
     }
 }
