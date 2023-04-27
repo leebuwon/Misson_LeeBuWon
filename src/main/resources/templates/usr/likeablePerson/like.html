@@ -124,8 +124,8 @@
             </form>
 
             <div class="text-center mt-4">
-                <a th:if="${@rq.member.hasConnectedInstaMember}" href="list" class="btn btn-link">호감목록</a>
-                <a th:if="${@rq.member.hasConnectedInstaMember}" href="/usr/member/me" class="btn btn-link">내 정보</a>
+                <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='list'" class="btn btn-sm btn-outline" type="submit">호감목록</button>
+                <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/member/me'" class="btn btn-sm btn-outline" type="submit">내 정보</button>
             </div>
         </div>
     </th:block>
