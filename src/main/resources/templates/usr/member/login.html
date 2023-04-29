@@ -52,7 +52,7 @@
         </h1>
 
         <form th:action method="POST" class="flex flex-col gap-6" onsubmit="LoginForm__submit(this); return false;">
-            <th:block th:if="${param.admin}">
+            <th:block th:if="${@rq.refererAdminPage}">
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">아이디</span>
@@ -89,7 +89,7 @@
             </a>
 
             <div class="flex flex-wrap justify-center">
-                <a href="/usr/home/about" class="btn btn-link">그램그램이란?</a>
+                <button onclick="location.href='/usr/home/about'" class="btn btn-sm btn-outline" type="submit">그램그램이란?</button>
             </div>
         </form>
     </div>

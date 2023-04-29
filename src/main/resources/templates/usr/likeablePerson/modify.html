@@ -9,9 +9,14 @@
 <main layout:fragment="main" class="flex-grow flex items-center justify-center">
 
     <script th:inline="javascript">
-        const myInstaMemberUsername = /*[[ ${@rq.member.instaMember.username} ]]*/ null;
+        const inputValue__attractiveTypeCode = /*[[ ${likeablePerson.attractiveTypeCode} ]]*/ null;
 
         function ModifyLikeForm__submit(form) {
+            if ( inputValue__attractiveTypeCode == form.attractiveTypeCode.value ) {
+                toastWarning('기존 호감사유와 다른 호감사유로 변경해주세요.');
+                return;
+            }
+
             form.submit(); // 폼 발송
         }
     </script>
@@ -45,6 +50,13 @@
 
             <div class="form-control">
                 <label class="label">
+                    <span class="label-text">기존 호감사유</span>
+                </label>
+                <div class="badge badge-primary" th:text="${likeablePerson.attractiveTypeDisplayName}"></div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
                     <span class="label-text">호감사유</span>
                 </label>
 
@@ -68,7 +80,7 @@
 
                     <label class="flex gap-2 items-center cursor-pointer">
                         <input type="radio" name="attractiveTypeCode" value="3" class="radio peer">
-                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
+                        <span class="text-gray-400 peer-checked:text-gray-900 peer-chWwecked:font-bold peer-focus:text-gray-700">
                                 <i class="fa-solid fa-people-roof"></i>
                                 능력
                             </span>
@@ -76,8 +88,9 @@
 
                     <script th:inline="javascript">
                         // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-                        const inputValue__attractiveTypeCode = /*[[ ${likeablePerson.attractiveTypeCode} ]]*/ null;
-                        $(`input[name=attractiveTypeCode][value=${inputValue__attractiveTypeCode}]:last`).prop('checked', true);
+                        $(`input[name=attractiveTypeCode][value=${inputValue__attractiveTypeCode}]:last`)
+                            .prop('checked', true)
+                            .prop('disabled', true);
                     </script>
                 </div>
 
