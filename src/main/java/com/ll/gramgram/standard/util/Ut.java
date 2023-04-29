@@ -10,7 +10,6 @@ import java.util.Base64;
 public class Ut {
     public static class hash {
         private static final MessageDigest md;
-
         static {
             try {
                 md = MessageDigest.getInstance("SHA-256");
