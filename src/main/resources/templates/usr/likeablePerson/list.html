@@ -20,13 +20,6 @@
                 호감목록
             </h1>
 
-            <div class="text-center mt-4">
-<!--                <a th:if="${@rq.member.hasConnectedInstaMember}" href="like" class="btn btn-link">호감표시</a>-->
-<!--                <a th:if="${@rq.member.hasConnectedInstaMember}" href="/usr/member/me" class="btn btn-link">내 정보</a>-->
-                <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='like'" class="btn btn-sm btn-outline" type="submit">호감표시</button>
-                <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/member/me'" class="btn btn-sm btn-outline" type="submit">내 정보</button>
-            </div>
-
             <ul th:if="${!#lists.isEmpty(likeablePeople)}" class="flex flex-col gap-4">
                 <li th:each="likeablePerson: ${likeablePeople}">
                     <div class="card bg-base-100 shadow-xl">
@@ -42,10 +35,34 @@
                                                                          th:text="${likeablePerson.toInstaMember.username}"></span>
                             </a>
 
-                            <div class="mt-4 mb-2 flex flex-col items-center gap-2">
-                                <div class="badge badge-primary">호감사유</div>
-                                <div th:data-test="|toInstaMember_attractiveTypeDisplayName=${likeablePerson.attractiveTypeDisplayName}|"
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-regular fa-clock"></i>
+                                    호감표시
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-primary"
+                                          th:text="${#temporals.format(likeablePerson.createDate, 'yy.MM.dd HH:mm')}"></span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-solid fa-check"></i>
+                                    호감사유
+                                </div>
+                                <div class="badge badge-primary"
+                                     th:data-test="|toInstaMember_attractiveTypeDisplayName=${likeablePerson.attractiveTypeDisplayName}|"
                                      th:utext="${likeablePerson.attractiveTypeDisplayNameWithIcon}"></div>
+                            </div>
+
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-regular fa-face-laugh-beam"></i>
+                                    상대방에게 보여지는 내 사진
+                                </div>
+                                <svg th:data-jdenticon-value="|${likeablePerson.jdenticon}|" width="120"
+                                     height="120"></svg>
                             </div>
 
                             <div class="card-actions justify-center">
@@ -69,6 +86,21 @@
                 </li>
             </ul>
         </th:block>
+
+        <div class="text-center mt-4">
+            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='like'" class="btn btn-sm btn-outline" type="submit">
+                    <span>
+                        <i class="fa-solid fa-heart-circle-plus"></i>
+                        호감표시&nbsp;
+                    </span>
+            </button>
+            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/member/me'" class="btn btn-sm btn-outline" type="submit">
+                    <span>
+                        <i class="fa-solid fa-user mr-1"></i>
+                        내 정보&nbsp;
+                    </span>
+            </button>
+        </div>
     </div>
 </main>
 </body>

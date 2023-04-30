@@ -12,7 +12,7 @@
         const inputValue__attractiveTypeCode = /*[[ ${likeablePerson.attractiveTypeCode} ]]*/ null;
 
         function ModifyLikeForm__submit(form) {
-            if ( inputValue__attractiveTypeCode == form.attractiveTypeCode.value ) {
+            if (inputValue__attractiveTypeCode == form.attractiveTypeCode.value) {
                 toastWarning('기존 호감사유와 다른 호감사유로 변경해주세요.');
                 return;
             }
@@ -31,14 +31,31 @@
               onsubmit="ModifyLikeForm__submit(this); return false;">
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">당신의 인스타 아이디</span>
+                    <span class="label-text">
+                        <i class="fa-regular fa-clock"></i>
+                        호감표시
+                    </span>
+                </label>
+                <span class="badge badge-primary"
+                      th:text="${#temporals.format(likeablePerson.createDate, 'yy.MM.dd HH:mm')}"></span>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">
+                        <i class="fa-brands fa-instagram"></i>
+                        당신의 인스타 아이디
+                    </span>
                 </label>
                 <div class="badge badge-primary" th:text="${likeablePerson.fromInstaMember.username}"></div>
             </div>
 
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">상대방 인스타 아이디</span>
+                    <span class="label-text">
+                        <i class="fa-brands fa-instagram"></i>
+                        상대방 인스타 아이디
+                    </span>
                 </label>
                 <div class="badge badge-primary" th:text="${likeablePerson.toInstaMember.username}"></div>
                 <a th:href="@{|https://instagram.com/${likeablePerson.toInstaMember.username}|}" target="_blank"
@@ -50,14 +67,20 @@
 
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">기존 호감사유</span>
+                    <span class="label-text">
+                        <i class="fa-solid fa-check"></i>
+                        기존 호감사유
+                    </span>
                 </label>
                 <div class="badge badge-primary" th:text="${likeablePerson.attractiveTypeDisplayName}"></div>
             </div>
 
             <div class="form-control">
                 <label class="label">
-                    <span class="label-text">호감사유</span>
+                    <span class="label-text">
+                        <i class="fa-solid fa-check"></i>
+                        새 호감사유
+                    </span>
                 </label>
 
                 <!-- 라벨을 클릭하면 라벨의 하위요소인 버튼(체크,라디오,일반 등)이 클릭되는 효과) -->
@@ -80,7 +103,7 @@
 
                     <label class="flex gap-2 items-center cursor-pointer">
                         <input type="radio" name="attractiveTypeCode" value="3" class="radio peer">
-                        <span class="text-gray-400 peer-checked:text-gray-900 peer-chWwecked:font-bold peer-focus:text-gray-700">
+                        <span class="text-gray-400 peer-checked:text-gray-900 peer-checked:font-bold peer-focus:text-gray-700">
                                 <i class="fa-solid fa-people-roof"></i>
                                 능력
                             </span>
@@ -103,9 +126,24 @@
         </form>
 
         <div class="text-center mt-4">
-            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/likeablePerson/like'" class="btn btn-sm btn-outline" type="submit">호감표시</button>
-            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/likeablePerson/list'" class="btn btn-sm btn-outline" type="submit">호감목록</button>
-            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/member/me'" class="btn btn-sm btn-outline" type="submit">내 정보</button>
+            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/likeablePerson/like'" class="btn btn-sm btn-outline" type="submit">
+                <span>
+                    <i class="fa-solid fa-heart-circle-plus mr-1"></i>
+                    호감표시&nbsp;
+                </span>
+            </button>
+            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/likeablePerson/list'" class="btn btn-sm btn-outline" type="submit">
+                <span>
+                    <i class="fa-solid fa-list-ol mr-1"></i>
+                    호감목록
+                </span>
+            </button>
+            <button th:if="${@rq.member.hasConnectedInstaMember}" onclick="location.href='/usr/member/me'" class="btn btn-sm btn-outline" type="submit">
+                <span>
+                    <i class="fa-solid fa-user mr-1"></i>
+                    내 정보
+                </span>
+            </button>
         </div>
     </div>
 </main>
