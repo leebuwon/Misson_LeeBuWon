@@ -1,19 +1,20 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
 import com.ll.gramgram.base.BaseEntity;
+import com.ll.gramgram.base.appconfig.AppConfig;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.standard.util.Ut;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -21,6 +22,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 public class LikeablePerson extends BaseEntity {
+    private LocalDateTime modifyUnlockDate;
 
     @ManyToOne(fetch = FetchType.LAZY) // Eager -> Lazy
     @ToString.Exclude
@@ -60,7 +62,17 @@ public class LikeablePerson extends BaseEntity {
         }
 
         this.attractiveTypeCode = attractiveTypeCode;
+        this.modifyUnlockDate = AppConfig.genLikeablePersonModifyUnlockDate();
 
         return RsData.of("S-1", "성공");
+    }
+
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
+    }
+
+    // 초 단위에서 올림 해주세요.
+    public String getModifyUnlockDateRemainStrHuman() {
+        return "5분";
     }
 }
