@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.concurrent.ThreadPoolExecutor;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -73,6 +73,16 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
-        return "5분";
+        LocalDateTime ableModifyDateTime = modifyUnlockDate;
+        Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
+        long minutes = duration.toMinutes();
+        long hours = minutes / 60;
+        long remainingMinutes = minutes % 60;
+
+        if (hours == 0){
+            return "%d분 후에 변경이 가능합니다.".formatted(remainingMinutes);
+        } else {
+            return "%d시간 %d분 후에 변경이 가능합니다.".formatted(hours, remainingMinutes);
+        }
     }
 }
