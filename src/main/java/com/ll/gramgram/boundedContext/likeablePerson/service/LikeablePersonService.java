@@ -118,21 +118,11 @@ public class LikeablePersonService {
         }
 
         // TODO: likeablePerson 추가시 쿨타임 체크하기
-        LocalDateTime nowDateTime = LocalDateTime.now();
+        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
 
-        LocalDateTime deleteDateTime = likeablePerson.getModifyUnlockDate();
-        log.info("modifyDateTime = {} ", deleteDateTime);
-
-        LocalDateTime ableModifyDateTime = deleteDateTime;
-        Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
-        long seconds = duration.toSeconds();
-        long minutes = seconds / 60;
-        long remainingSeconds = seconds % 60;
-        long hours = minutes / 60;
-        long remainingMinutes = minutes % 60;
-
-        if (nowDateTime.isBefore(deleteDateTime)){
-            return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %s시 %s분 %s초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
+        RsData rsDataModifyCoolTime = checkCoolTime(modifyDateTime);
+        if (rsDataModifyCoolTime.getResultCode().equals("F-1")) {
+            return rsDataModifyCoolTime;
         }
 
         return RsData.of("S-1", "삭제가능합니다.");
@@ -250,14 +240,24 @@ public class LikeablePersonService {
         }
 
         // TODO: likeablePerson 추가시 쿨타임 체크하기
+        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
+
+        RsData rsDataModifyCoolTime = checkCoolTime(modifyDateTime);
+        if (rsDataModifyCoolTime.getResultCode().equals("F-1")) {
+            return rsDataModifyCoolTime;
+        }
+
+        return RsData.of("S-1", "호감표시취소가 가능합니다.");
+    }
+
+    // 쿨타임 체크
+    private RsData checkCoolTime(LocalDateTime modifyDateTime) {
         LocalDateTime nowDateTime = LocalDateTime.now();
         log.info("nowDateTime = {} ", nowDateTime);
 
-        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
-        log.info("modifyDateTime = {} ", modifyDateTime);
+        log.info("modifyDateTime = {}", modifyDateTime);
 
-        LocalDateTime ableModifyDateTime = modifyDateTime;
-        Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
+        Duration duration = Duration.between(LocalDateTime.now(), modifyDateTime);
         long seconds = duration.toSeconds();
         long minutes = seconds / 60;
         long remainingSeconds = seconds % 60;
@@ -268,6 +268,6 @@ public class LikeablePersonService {
             return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %s시 %s분 %s초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
         }
 
-        return RsData.of("S-1", "호감표시취소가 가능합니다.");
+        return RsData.of("S-1", "수정 가능합니다.");
     }
 }
