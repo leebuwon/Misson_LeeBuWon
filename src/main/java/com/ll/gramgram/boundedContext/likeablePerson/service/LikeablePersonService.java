@@ -113,8 +113,27 @@ public class LikeablePersonService {
         // 삭제 대상의 작성자(호감표시한 사람)의 인스타계정 번호
         long fromInstaMemberId = likeablePerson.getFromInstaMember().getId();
 
-        if (actorInstaMemberId != fromInstaMemberId)
+        if (actorInstaMemberId != fromInstaMemberId) {
             return RsData.of("F-2", "권한이 없습니다.");
+        }
+
+        // TODO: likeablePerson 추가시 쿨타임 체크하기
+        LocalDateTime nowDateTime = LocalDateTime.now();
+
+        LocalDateTime deleteDateTime = likeablePerson.getModifyUnlockDate();
+        log.info("modifyDateTime = {} ", deleteDateTime);
+
+        LocalDateTime ableModifyDateTime = deleteDateTime;
+        Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
+        long seconds = duration.toSeconds();
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
+        long hours = minutes / 60;
+        long remainingMinutes = minutes % 60;
+
+        if (nowDateTime.isBefore(deleteDateTime)){
+            return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %s시 %s분 %s초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
+        }
 
         return RsData.of("S-1", "삭제가능합니다.");
     }
