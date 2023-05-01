@@ -75,14 +75,16 @@ public class LikeablePerson extends BaseEntity {
     public String getModifyUnlockDateRemainStrHuman() {
         LocalDateTime ableModifyDateTime = modifyUnlockDate;
         Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
-        long minutes = duration.toMinutes();
+        long seconds = duration.toSeconds();
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
         long hours = minutes / 60;
         long remainingMinutes = minutes % 60;
 
         if (hours == 0){
-            return "%d분 후에 변경이 가능합니다.".formatted(remainingMinutes);
+            return "%d분 %d초 후 ".formatted(remainingMinutes, remainingSeconds);
         } else {
-            return "%d시간 %d분 후에 변경이 가능합니다.".formatted(hours, remainingMinutes);
+            return "%d시간 %d분 %초 후 ".formatted(hours, remainingMinutes, remainingSeconds);
         }
     }
 }

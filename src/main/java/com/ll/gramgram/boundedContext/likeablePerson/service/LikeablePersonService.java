@@ -16,6 +16,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -61,13 +63,22 @@ public class LikeablePersonService {
         // 너를 좋아하는 호감표시 생겼어.
         toInstaMember.addToLikeablePerson(likeablePerson);
 
+        // TODO: likeablePerson 추가시 쿨타임 체크하기
+//        LocalDateTime nowDateTime = LocalDateTime.now();
+//        log.info("nowDateTime = {} ", nowDateTime);
+//
+//        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
+//        log.info("modifyDateTime = {} ", modifyDateTime);
+//
+//        if (nowDateTime.isBefore(modifyDateTime)){
+//            return RsData.of("F-1", "해당 호감표시건은 까지 수정이 불가능합니다.");
+//        }
 
         // 좋아요 수 증가
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
-
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
@@ -219,6 +230,24 @@ public class LikeablePersonService {
             return RsData.of("F-2", "해당 호감표시를 취소할 권한이 없습니다.");
         }
 
+        // TODO: likeablePerson 추가시 쿨타임 체크하기
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        log.info("nowDateTime = {} ", nowDateTime);
+
+        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
+        log.info("modifyDateTime = {} ", modifyDateTime);
+
+        LocalDateTime ableModifyDateTime = modifyDateTime;
+        Duration duration = Duration.between(LocalDateTime.now(), ableModifyDateTime);
+        long seconds = duration.toSeconds();
+        long minutes = seconds / 60;
+        long remainingSeconds = seconds % 60;
+        long hours = minutes / 60;
+        long remainingMinutes = minutes % 60;
+
+        if (nowDateTime.isBefore(modifyDateTime)){
+            return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %s시 %s분 %s초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
+        }
 
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
     }

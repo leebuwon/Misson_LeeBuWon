@@ -66,15 +66,12 @@
                             </div>
 
                             <div class="card-actions justify-center">
-                                <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline"
-                                   th:classappend="${!likeablePerson.modifyUnlocked ? 'btn-disabled' : ''}">
+                                <a th:href="@{|modify/${likeablePerson.id}|}" class="btn btn-sm btn-outline">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     &nbsp;
                                     호감사유 변경
                                 </a>
-                                <a class="btn btn-sm btn-outline"
-                                   th:classappend="${!likeablePerson.modifyUnlocked ? 'btn-disabled' : ''}"
-                                   href="javascript:"
+                                <a class="btn btn-sm btn-outline" href="javascript:"
                                    onclick="if ( confirm('정말로 취소하시겠습니까?') ) $(this).next().submit();">
                                     <i class="fa-solid fa-user-slash"></i>
                                     &nbsp;
