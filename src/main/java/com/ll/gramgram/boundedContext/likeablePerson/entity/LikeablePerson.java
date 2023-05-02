@@ -82,9 +82,12 @@ public class LikeablePerson extends BaseEntity {
         long remainingMinutes = minutes % 60;
 
         if (hours == 0){
+            if (minutes == 0){
+                return "%d초 후 ".formatted(remainingSeconds);
+            }
             return "%d분 %d초 후 ".formatted(remainingMinutes, remainingSeconds);
         } else {
-            return "%d시간 %d분 %초 후 ".formatted(hours, remainingMinutes, remainingSeconds);
+            return "%d시간 %d분 %d초 후 ".formatted(hours, remainingMinutes, remainingSeconds);
         }
     }
 }

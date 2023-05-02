@@ -63,16 +63,8 @@ public class LikeablePersonService {
         // 너를 좋아하는 호감표시 생겼어.
         toInstaMember.addToLikeablePerson(likeablePerson);
 
-        // TODO: likeablePerson 추가시 쿨타임 체크하기
-//        LocalDateTime nowDateTime = LocalDateTime.now();
-//        log.info("nowDateTime = {} ", nowDateTime);
-//
-//        LocalDateTime modifyDateTime = likeablePerson.getModifyUnlockDate();
-//        log.info("modifyDateTime = {} ", modifyDateTime);
-//
-//        if (nowDateTime.isBefore(modifyDateTime)){
-//            return RsData.of("F-1", "해당 호감표시건은 까지 수정이 불가능합니다.");
-//        }
+        // TODO: 05/01 likeablePerson 추가시 쿨타임 체크하기
+
 
         // 좋아요 수 증가
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
@@ -265,7 +257,7 @@ public class LikeablePersonService {
         long remainingMinutes = minutes % 60;
 
         if (nowDateTime.isBefore(modifyDateTime)){
-            return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %s시 %s분 %s초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
+            return RsData.of("F-1", "해당 호감사유변경 및 호감취소는 %d시 %d분 %d초 동안 수정이 불가능힙니다.".formatted(hours, remainingMinutes, remainingSeconds));
         }
 
         return RsData.of("S-1", "수정 가능합니다.");
