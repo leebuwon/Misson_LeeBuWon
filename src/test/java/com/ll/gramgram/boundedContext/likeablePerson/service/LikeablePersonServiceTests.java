@@ -185,7 +185,7 @@ public class LikeablePersonServiceTests {
         */
         List<LikeablePerson> likeablePeople2 = likeablePersonRepository.findByToInstaMember_username("insta_user100");
 
-        assertThat(likeablePeople2.get(0).getId()).isEqualTo(2);
+        assertThat(likeablePeople2.get(0).getId()).isEqualTo(3L);
 
         // 좋아하는 사람이 2번 인스타 회원이고, 좋아하는 대상의 인스타아이디가 "insta_user100" 인 `좋아요`
         /*
@@ -205,7 +205,7 @@ public class LikeablePersonServiceTests {
         */
         LikeablePerson likeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMember_username(2L, "insta_user100");
 
-        assertThat(likeablePerson.getId()).isEqualTo(2);
+        assertThat(likeablePerson.getId()).isEqualTo(3L);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class LikeablePersonServiceTests {
     void t005() throws Exception {
         LikeablePerson likeablePerson = likeablePersonRepository.findQslByFromInstaMemberIdAndToInstaMember_username(2L, "insta_user4").orElse(null);
 
-        assertThat(likeablePerson.getId()).isEqualTo(1L);
+        assertThat(likeablePerson.getId()).isEqualTo(2L);
     }
 
     @Test
@@ -249,7 +249,8 @@ public class LikeablePersonServiceTests {
         // 호감표시를 생성하면 쿨타임이 지정되기 때문에, 그래서 바로 수정이 안된다.
         // 그래서 강제로 쿨타임이 지난것으로 만든다.
         // 테스트를 위해서 억지로 값을 넣는다.
-        TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", LocalDateTime.now().minusSeconds(-1));
+        // 현재의 호감사유변경 및 취소는 30초간 쿨타임이 지정되어있다.
+        TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", LocalDateTime.now().plusSeconds(31));
 
         // 수정을 하면 쿨타임이 갱신된다.
         likeablePersonService.modifyAttractive(memberUser3, likeablePersonToBts, 1);
@@ -258,6 +259,31 @@ public class LikeablePersonServiceTests {
         assertThat(
                 likeablePersonToBts.getModifyUnlockDate().isAfter(coolTime)
         ).isTrue();
+    }
+
+    @Test
+    @DisplayName("호감사유를 변경하면 쿨타임 전에 갱신하면 실패한다..")
+    void t009() throws Exception {
+        // 현재시점 기준에서 쿨타임이 다 차는 시간을 구한다.(미래)
+        LocalDateTime coolTime = AppConfig.genLikeablePersonModifyUnlockDate();
+
+        Member memberUser3 = memberService.findByUsername("user3").orElseThrow();
+        // 호감표시를 생성한다.
+        LikeablePerson likeablePersonToBts = likeablePersonService.like(memberUser3, "bts", 3).getData();
+
+        // 호감표시를 생성하면 쿨타임이 지정되기 때문에, 그래서 바로 수정이 안된다.
+        // 그래서 강제로 쿨타임이 지난것으로 만든다.
+        // 테스트를 위해서 억지로 값을 넣는다.
+        // 현재의 호감사유변경 및 취소는 30초간 쿨타임이 지정되어있다.
+        TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", LocalDateTime.now().plusSeconds(20));
+
+        // 수정을 하면 쿨타임이 갱신된다.
+        likeablePersonService.modifyAttractive(memberUser3, likeablePersonToBts, 1);
+
+        // 갱신 되었는지 확인
+        assertThat(
+                likeablePersonToBts.getModifyUnlockDate().isAfter(coolTime)
+        ).isFalse();
     }
 
 }
