@@ -128,14 +128,21 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model) {
-        //TODO : 필수미션
+    public String showToList(@RequestParam(name = "gender", defaultValue = "") String gender, Model model) {
+        //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 성별 필터링기능 구현
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            log.info("gender = {}", gender);
+
+            // @RequestParam을 통해 gender에서 W / M 을 받아 온다.
+            if (gender.equals("W") || gender.equals("M")){
+                likeablePeople = likeablePersonService.filterGender(likeablePeople, gender);
+            }
+
             model.addAttribute("likeablePeople", likeablePeople);
         }
 

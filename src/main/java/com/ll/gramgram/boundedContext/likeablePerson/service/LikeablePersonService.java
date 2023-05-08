@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -263,4 +264,13 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "수정 가능합니다.");
     }
+
+    public List<LikeablePerson> filterGender(List<LikeablePerson> likeablePeople, String gender) {
+        List<LikeablePerson> filterOption = likeablePeople.stream()
+                .filter(p -> p.getFromInstaMember().getGender().equals(gender))
+                .collect(Collectors.toList());
+
+        return filterOption;
+    }
 }
+
