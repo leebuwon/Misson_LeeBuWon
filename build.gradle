@@ -41,6 +41,9 @@ dependencies {
     // h2 추가
     runtimeOnly 'com.h2database:h2'
 
+    // 캐싱
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // 타임리프에서 layout.html 사용하려고
 }
