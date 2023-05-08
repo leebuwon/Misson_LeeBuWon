@@ -128,7 +128,8 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(@RequestParam(name = "gender", defaultValue = "") String gender, Model model) {
+    public String showToList(@RequestParam(name = "gender", defaultValue = "") String gender,
+                             @RequestParam(name = "attractiveTypeCode", defaultValue = "") String attractiveTypeCode, Model model) {
         //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 성별 필터링기능 구현
         InstaMember instaMember = rq.getMember().getInstaMember();
 
@@ -141,6 +142,11 @@ public class LikeablePersonController {
             // @RequestParam을 통해 gender에서 W / M 을 받아 온다.
             if (gender.equals("W") || gender.equals("M")){
                 likeablePeople = likeablePersonService.filterGender(likeablePeople, gender);
+            }
+
+            log.info("attractiveTypeCode = {} ", attractiveTypeCode);
+            if (!attractiveTypeCode.isEmpty()){
+                likeablePeople = likeablePersonService.filterAttractiveTypeCode(likeablePeople, attractiveTypeCode);
             }
 
             model.addAttribute("likeablePeople", likeablePeople);

@@ -266,11 +266,21 @@ public class LikeablePersonService {
     }
 
     public List<LikeablePerson> filterGender(List<LikeablePerson> likeablePeople, String gender) {
-        List<LikeablePerson> filterOption = likeablePeople.stream()
+        List<LikeablePerson> filterGender = likeablePeople.stream()
                 .filter(p -> p.getFromInstaMember().getGender().equals(gender))
                 .collect(Collectors.toList());
 
-        return filterOption;
+        return filterGender;
+    }
+
+    public List<LikeablePerson> filterAttractiveTypeCode(List<LikeablePerson> likeablePeople, String attractiveTypeCode) {
+        int toAttractiveTypeCode = Integer.parseInt(attractiveTypeCode);
+
+        List<LikeablePerson> filterAttractiveTypeCode = likeablePeople.stream()
+                .filter(p -> p.getAttractiveTypeCode() == toAttractiveTypeCode)
+                .collect(Collectors.toList());
+
+        return filterAttractiveTypeCode;
     }
 }
 
