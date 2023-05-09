@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.BaseEntity;
 import com.ll.gramgram.base.appconfig.AppConfig;
 import com.ll.gramgram.base.event.EventAfterLike;
 import com.ll.gramgram.base.event.EventAfterModifyAttractiveType;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -281,6 +283,61 @@ public class LikeablePersonService {
                 .collect(Collectors.toList());
 
         return filterAttractiveTypeCode;
+    }
+
+    //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능
+    public List<LikeablePerson> filterSort(List<LikeablePerson> likeablePeople, String sortCode) {
+        int toSortCode = Integer.parseInt(sortCode);
+
+        if (toSortCode == 1){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 2){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing(BaseEntity::getCreateDate))
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 3){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson likeablePerson) -> likeablePerson.getFromInstaMember().getToLikeablePeople().size()).reversed())
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 4){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson likeablePerson) -> likeablePerson.getFromInstaMember().getToLikeablePeople().size()))
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 5){
+
+        }
+
+        if (toSortCode == 6){
+
+        }
+
+        return null;
     }
 }
 
