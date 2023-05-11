@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.BaseEntity;
 import com.ll.gramgram.base.appconfig.AppConfig;
 import com.ll.gramgram.base.event.EventAfterLike;
 import com.ll.gramgram.base.event.EventAfterModifyAttractiveType;
@@ -18,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -263,4 +266,91 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "수정 가능합니다.");
     }
+
+    //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 성별 필터링기능 구현 (필수미션)
+    public List<LikeablePerson> filterGender(List<LikeablePerson> likeablePeople, String gender) {
+        List<LikeablePerson> filterGender = likeablePeople.stream()
+                .filter(p -> p.getFromInstaMember().getGender().equals(gender))
+                .collect(Collectors.toList());
+
+        return filterGender;
+    }
+
+    //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현 (선택미션)
+    public List<LikeablePerson> filterAttractiveTypeCode(List<LikeablePerson> likeablePeople, String attractiveTypeCode) {
+        int toAttractiveTypeCode = Integer.parseInt(attractiveTypeCode);
+
+        List<LikeablePerson> filterAttractiveTypeCode = likeablePeople.stream()
+                .filter(p -> p.getAttractiveTypeCode() == toAttractiveTypeCode)
+                .collect(Collectors.toList());
+
+        return filterAttractiveTypeCode;
+    }
+
+    //TODO : 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능
+    public List<LikeablePerson> filterSort(List<LikeablePerson> likeablePeople, String sortCode) {
+        int toSortCode = Integer.parseInt(sortCode);
+        log.info("toSortCode = {}", sortCode);
+
+        if (toSortCode == 2){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing(LikeablePerson::getCreateDate))
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 3){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson likeablePerson) -> likeablePerson.getFromInstaMember().getToLikeablePeople().size()).reversed())
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 4){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson likeablePerson) -> likeablePerson.getFromInstaMember().getToLikeablePeople().size()))
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 5){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparing((LikeablePerson likeablePerson) -> likeablePerson.getFromInstaMember().getGender().equals("W") ? 1 : 0)
+                            .thenComparing(LikeablePerson::getCreateDate).reversed())
+                    .collect(Collectors.toList());
+
+            log.info("filterSortCode = {}", filterSortCode);
+
+            return filterSortCode;
+        }
+
+        if (toSortCode == 6){
+            List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                    .sorted(Comparator.comparingInt(LikeablePerson::getAttractiveTypeCode)
+                            .thenComparing(Comparator.comparing(BaseEntity::getCreateDate).reversed()))
+                    .collect(Collectors.toList());
+
+            return filterSortCode;
+        }
+
+        // default 1이 넘어오니깐 따로 if문을 설정해주지 않았다.
+        List<LikeablePerson> filterSortCode = likeablePeople.stream()
+                .sorted(Comparator.comparing(LikeablePerson::getCreateDate).reversed())
+                .collect(Collectors.toList());
+
+        log.info("filterSortCode = {}", filterSortCode);
+
+        return filterSortCode;
+
+    }
 }
+
