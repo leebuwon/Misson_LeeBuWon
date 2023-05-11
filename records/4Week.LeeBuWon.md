@@ -33,6 +33,7 @@
 
 
 ### [수정해야할 부분]
+- [x] 수정완료 ( .thenComparing(Comparator.comparing(BaseEntity::getCreateDate).reversed())) )
 - 현재 선택미션2번의 6번이 글이 최신순으로 나오지 않는다. likeablePeople.stream()
   .sorted(Comparator.comparingInt(LikeablePerson::getAttractiveTypeCode)
   .thenComparing(BaseEntity::getCreateDate)) 에서 reverse()를 해놓으면 AttractiveTypeCode까지 정렬이 잘못되기 때문에 아직 해결하지 못하였다.

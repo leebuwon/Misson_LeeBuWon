@@ -336,7 +336,7 @@ public class LikeablePersonService {
         if (toSortCode == 6){
             List<LikeablePerson> filterSortCode = likeablePeople.stream()
                     .sorted(Comparator.comparingInt(LikeablePerson::getAttractiveTypeCode)
-                            .thenComparing(BaseEntity::getCreateDate))
+                            .thenComparing(Comparator.comparing(BaseEntity::getCreateDate).reversed()))
                     .collect(Collectors.toList());
 
             return filterSortCode;
